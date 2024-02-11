@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "weathertracker"
+version = "0.1.0"
+description = "Django web application which can show the current weather for any city"
+authors = ["Samzcodes <kuttysaam@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^5.0.2"
+djangorestframework = "^3.14.0"
+django-filter = "^23.5"
+mypy = "^1.8.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
