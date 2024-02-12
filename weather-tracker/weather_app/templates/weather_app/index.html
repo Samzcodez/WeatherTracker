@@ -8,20 +8,18 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="city" placeholder="Enter city name">
-  <button type="submit">Check Weather</button>
-</form>
-
-<div class="comparison-container">
-  {% if weather_data %}
-    <div class="city-container">
-      {% include 'weather_app/city_weather.html' with weather_data=weather_data  %}
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="city" placeholder="Enter city name">
+        <button type="submit">Check Weather</button>
+      </form>
+    <div class="comparison-container">
+      {% if weather_data %}
+        <div class="city-container">
+          {% include 'weather_app/city_weather.html' with weather_data=weather_data  %}
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-</div>
 
 </body>
 </html>

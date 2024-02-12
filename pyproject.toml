@@ -13,6 +13,7 @@ mypy = "^1.8.0"
 pydantic = "^2.6.1"
 pydantic-settings = "^2.1.0"
 requests = "^2.31.0"
+pycountry = "^23.12.11"
 
 [tool.poetry.dev-dependencies]
 

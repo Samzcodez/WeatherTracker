@@ -1,12 +1,33 @@
 {% if weather_data %}
-    <h1>{{ weather_data.city }}</h1>
-    <h2>Temperature: {{ weather_data.temperature }}°C </h2>
-    <p> Min: {{ weather_data.temperature_min }}°C</p>
-    <p> Max: {{ weather_data.temperature_max }}°C</p>
-    <h2>Humidity: {{ weather_data.humidity }} </h2>
-    <h2>Pressure: {{ weather_data.pressure }} </h2>
-    <h2>Wind_speed: {{ weather_data.wind_speed }} </h2>
-    <h2>Wind_direction: {{ weather_data.wind_direction }} </h2>
-    <h2>Description: {{ weather_data.description }}</p>
-    <img src="http://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{ weather_data.description }}">
+<div style="border: 1px solid #ccc; padding-top: 30px; padding-right: 150px; padding-bottom: 30px; padding-left: 150px; border-radius: 20px; text-align: center;">
+        <h1>{{ weather_data.city }}, {{weather_data.country}}</h1>
+        <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+            <div>
+                <h2>Temperature</h2>
+                <p>Current: {{ weather_data.temperature }}°C</p>
+                <p>Min: {{ weather_data.temperature_min }}°C</p>
+                <p>Max: {{ weather_data.temperature_max }}°C</p>
+            </div>
+            <div>
+                <h2>Humidity</h2>
+                <p>{{ weather_data.humidity }}%</p>
+            </div>
+            <div>
+                <h2>Pressure</h2>
+                <p>{{ weather_data.pressure }} hPa</p>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+            <div>
+                <h2>Wind</h2>
+                <p>Speed: {{ weather_data.wind_speed }} m/s</p>
+                <p>Direction: {{ weather_data.wind_direction }}</p>
+            </div>
+            <div>
+                <h2>Description</h2>
+                <p>{{ weather_data.description }}</p>
+                <p><img src="http://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{ weather_data.description }}" style="width: 100px; height: 100px;"></p>
+            </div>
+        </div>
+    </div>
 {% endif %}

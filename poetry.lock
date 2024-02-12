@@ -112,6 +112,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "pycountry"
+version = "23.12.11"
+description = "ISO country, subdivision, language, currency and script definitions and their translations"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "pydantic"
 version = "2.6.1"
 description = "Data validation using Python type hints"
@@ -241,7 +249,7 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2e25179b5f555c0060f75706e5949cf6f3adda37038ab5b16b96d8f1790fb47e"
+content-hash = "e7a8ee7b8b516507a5b5b43e7459a64cef2395ee5a93bc094318427f9d6b4729"
 
 [metadata.files]
 annotated-types = []
@@ -254,6 +262,7 @@ djangorestframework = []
 idna = []
 mypy = []
 mypy-extensions = []
+pycountry = []
 pydantic = []
 pydantic-core = []
 pydantic-settings = []
