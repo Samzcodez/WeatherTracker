@@ -80,6 +80,14 @@ REST_FRAMEWORK = {
     ],
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "weather_app_cache",
+    }
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 

@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.conf import settings
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import requests
 import pycountry
+import warnings
 
+warnings.filterwarnings("ignore", category=Warning, module="django.core.cache")
 open_weather_api_key = settings.OPEN_WEATHER_API_KEY
 current_weather_url = (
     "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric&lang={}"
@@ -70,6 +74,9 @@ def index(request):
 
 
 class GetCurrentWeather(APIView):
+    @method_decorator(
+        cache_page(60 * 15, key_prefix=lambda city, lang: f"{city}_{lang}")
+    )
     def get(self, request, city, lang):
         try:
             weather_data = fetch_weather_and_forecast(
@@ -80,6 +87,7 @@ class GetCurrentWeather(APIView):
                 for key, value in weather_data.items()
                 if key not in keyword_translations["icon"].values()
             }
+
             return Response(
                 {
                     keyword_translations["city"][lang]: city,
@@ -89,6 +97,7 @@ class GetCurrentWeather(APIView):
                 },
                 status=status.HTTP_200_OK,
             )
+
         except Exception as e:
             return Response(
                 {"error": f"Error fetching weather data for {city}: {str(e)}"},
