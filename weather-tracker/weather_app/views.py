@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 import requests
 import pycountry
 
@@ -12,18 +15,40 @@ current_weather_url = (
 # Create your views here.
 def index(request):
     if request.method == "POST":
+        try:
+            city = request.POST["city"]
+            # retrieve imformation from weather api = https://api.openweathermap.org/api
+            weather_data = fetch_weather_and_forecast(
+                city, open_weather_api_key, current_weather_url
+            )
+        except Exception as e:
+            weather_data = {
+                "city": f"Weather details not found for: {city}",
+            }
 
-        city = request.POST["city"]
-        # retrieve imformation from weather api = https://api.openweathermap.org/api
-        weather_data = fetch_weather_and_forecast(
-            city, open_weather_api_key, current_weather_url
-        )
         context = {
             "weather_data": weather_data,
         }
         return render(request, "weather_app/index.html", context)
     else:
         return render(request, "weather_app/index.html")
+
+
+class GetCurrentWeather(APIView):
+    def get(self, request, city):
+        try:
+            weather_data = fetch_weather_and_forecast(
+                city, open_weather_api_key, current_weather_url
+            )
+            return Response(
+                {"city": city, "current_weather": weather_data},
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Error fetching weather data for {city}: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 def convert_wind_direction(degrees):

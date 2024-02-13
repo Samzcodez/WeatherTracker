@@ -77,9 +77,38 @@ django = ">=3.0"
 pytz = "*"
 
 [[package]]
+name = "drf-yasg"
+version = "1.21.7"
+description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+django = ">=2.2.16"
+djangorestframework = ">=3.10.3"
+inflection = ">=0.3.1"
+packaging = ">=21.0"
+pytz = ">=2021.1"
+pyyaml = ">=5.1"
+uritemplate = ">=3.0.0"
+
+[package.extras]
+coreapi = ["coreapi (>=2.3.3)", "coreschema (>=0.0.4)"]
+validation = ["swagger-spec-validator (>=2.1.0)"]
+
+[[package]]
 name = "idna"
 version = "3.6"
 description = "Internationalized Domain Names in Applications (IDNA)"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
+name = "inflection"
+version = "0.5.1"
+description = "A port of Ruby on Rails inflector to Python"
 category = "main"
 optional = false
 python-versions = ">=3.5"
@@ -110,6 +139,14 @@ description = "Type system extensions for programs checked with the mypy type ch
 category = "main"
 optional = false
 python-versions = ">=3.5"
+
+[[package]]
+name = "packaging"
+version = "23.2"
+description = "Core utilities for Python packages"
+category = "main"
+optional = false
+python-versions = ">=3.7"
 
 [[package]]
 name = "pycountry"
@@ -178,6 +215,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "pyyaml"
+version = "6.0.1"
+description = "YAML parser and emitter for Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "requests"
 version = "2.31.0"
 description = "Python HTTP for Humans."
@@ -233,6 +278,14 @@ optional = false
 python-versions = ">=2"
 
 [[package]]
+name = "uritemplate"
+version = "4.1.1"
+description = "Implementation of RFC 6570 URI Templates"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "urllib3"
 version = "2.2.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -249,7 +302,7 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "e7a8ee7b8b516507a5b5b43e7459a64cef2395ee5a93bc094318427f9d6b4729"
+content-hash = "e5522bd0bf83507d4a1c9e7d9b88711180ed8d4ac4ec632946c9171dfb426f55"
 
 [metadata.files]
 annotated-types = []
@@ -259,18 +312,23 @@ charset-normalizer = []
 django = []
 django-filter = []
 djangorestframework = []
+drf-yasg = []
 idna = []
+inflection = []
 mypy = []
 mypy-extensions = []
+packaging = []
 pycountry = []
 pydantic = []
 pydantic-core = []
 pydantic-settings = []
 python-dotenv = []
 pytz = []
+pyyaml = []
 requests = []
 sqlparse = []
 tomli = []
 typing-extensions = []
 tzdata = []
+uritemplate = []
 urllib3 = []

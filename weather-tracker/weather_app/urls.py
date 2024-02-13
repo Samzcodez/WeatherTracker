@@ -1,6 +1,11 @@
 from django.urls import path
-from . import views
+from .views import index, GetCurrentWeather
 
 urlpatterns = [
-    path("", views.index),
+    path("", index),
+    path(
+        "current-weather/<str:city>/",
+        GetCurrentWeather.as_view(),
+        name="get_current_weather",
+    ),
 ]
