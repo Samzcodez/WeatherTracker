@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.conf import settings
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
+from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -74,11 +73,21 @@ def index(request):
 
 
 class GetCurrentWeather(APIView):
-    @method_decorator(
-        cache_page(60 * 15, key_prefix=lambda city, lang: f"{city}_{lang}")
-    )
-    def get(self, request, city, lang):
+    def get(self, request, city, lang, cache_timeout):
         try:
+            # Check if data is in cache
+            valid_cache_timeouts = [5, 10, 60]
+            if cache_timeout not in valid_cache_timeouts:
+                return Response(
+                    {"error": "Invalid cache_timeout value."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            cache_key = f"{city}_{lang}"
+            cached_data = cache.get(cache_key)
+            if cached_data:
+                print("Cache hit for:", cache_key)
+                return Response(cached_data, status=status.HTTP_200_OK)
+            print("Cache miss for:", cache_key)
             weather_data = fetch_weather_and_forecast(
                 city, lang, open_weather_api_key, current_weather_url
             )
@@ -87,7 +96,7 @@ class GetCurrentWeather(APIView):
                 for key, value in weather_data.items()
                 if key not in keyword_translations["icon"].values()
             }
-
+            cache.set(cache_key, modified_weather_data, cache_timeout * 60)
             return Response(
                 {
                     keyword_translations["city"][lang]: city,
@@ -100,7 +109,7 @@ class GetCurrentWeather(APIView):
 
         except Exception as e:
             return Response(
-                {"error": f"Error fetching weather data for {city}: {str(e)}"},
+                {"error": f"Error fetching weather data for the city {city}: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
