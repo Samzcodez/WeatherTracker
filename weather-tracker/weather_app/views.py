@@ -4,11 +4,10 @@ from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-import requests
+import httpx
+import asyncio
 import pycountry
-import warnings
 
-warnings.filterwarnings("ignore", category=Warning, module="django.core.cache")
 open_weather_api_key = settings.OPEN_WEATHER_API_KEY
 current_weather_url = (
     "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric&lang={}"
@@ -153,14 +152,20 @@ def get_response_value(response_data, key):
 
 
 def fetch_weather_and_forecast(city, language, api_key, current_weather_url):
-    response_data = requests.get(
-        current_weather_url.format(city, api_key, language)
-    ).json()
+    async def async_fetch():
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                current_weather_url.format(city, api_key, language)
+            )
+            response_data = response.json()
 
-    # convert  json file into python dectionary
-    weather_data = {
-        keyword_translations[key][language]: get_response_value(response_data, key)
-        for key in keyword_translations
-        if key != "current_weather"
-    }
-    return weather_data
+            # convert  json file into python dectionary
+            return {
+                keyword_translations[key][language]: get_response_value(
+                    response_data, key
+                )
+                for key in keyword_translations
+                if key != "current_weather"
+            }
+
+    return asyncio.run(async_fetch())
