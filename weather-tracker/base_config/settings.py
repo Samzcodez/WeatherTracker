@@ -87,6 +87,36 @@ CACHES = {
     }
 }
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S%z",
+        },
+    },
+    "handlers": {
+        "stdout": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+            "stream": "ext://sys.stdout",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["stdout"],
+            "propagate": True,
+        },
+        "weather-tracker.weather_app": {
+            "handlers": ["stdout"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
