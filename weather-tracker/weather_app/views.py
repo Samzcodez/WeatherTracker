@@ -8,8 +8,43 @@ import pycountry
 
 open_weather_api_key = settings.OPEN_WEATHER_API_KEY
 current_weather_url = (
-    "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric"
+    "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric&lang={}"
 )
+# Keyword translations for English, German, and French
+keyword_translations = {
+    "current_weather": {
+        "en": "current_weather",
+        "de": "aktuelles_Wetter",
+        "fr": "temps_courant",
+    },
+    "city": {"en": "city", "de": "stadt", "fr": "ville"},
+    "country": {"en": "country", "de": "land", "fr": "pays"},
+    "temperature": {"en": "temperature", "de": "temperatur", "fr": "température"},
+    "temperature_min": {
+        "en": "temperature_min",
+        "de": "temperatur_min",
+        "fr": "température_min",
+    },
+    "temperature_max": {
+        "en": "temperature_max",
+        "de": "temperatur_max",
+        "fr": "température_max",
+    },
+    "humidity": {"en": "humidity", "de": "luftfeuchtigkeit", "fr": "humidité"},
+    "pressure": {"en": "pressure", "de": "druck", "fr": "pression"},
+    "wind_speed": {
+        "en": "wind_speed",
+        "de": "wind_geschwindigkeit",
+        "fr": "vitesse_vent",
+    },
+    "wind_direction": {
+        "en": "wind_direction",
+        "de": "wind_richtung",
+        "fr": "direction_vent",
+    },
+    "description": {"en": "description", "de": "beschreibung", "fr": "description"},
+    "icon": {"en": "icon", "de": "symbol", "fr": "icône"},
+}
 
 
 # Create your views here.
@@ -19,7 +54,7 @@ def index(request):
             city = request.POST["city"]
             # retrieve imformation from weather api = https://api.openweathermap.org/api
             weather_data = fetch_weather_and_forecast(
-                city, open_weather_api_key, current_weather_url
+                city, "en", open_weather_api_key, current_weather_url
             )
         except Exception as e:
             weather_data = {
@@ -35,13 +70,23 @@ def index(request):
 
 
 class GetCurrentWeather(APIView):
-    def get(self, request, city):
+    def get(self, request, city, lang):
         try:
             weather_data = fetch_weather_and_forecast(
-                city, open_weather_api_key, current_weather_url
+                city, lang, open_weather_api_key, current_weather_url
             )
+            modified_weather_data = {
+                key: value
+                for key, value in weather_data.items()
+                if key not in keyword_translations["icon"].values()
+            }
             return Response(
-                {"city": city, "current_weather": weather_data},
+                {
+                    keyword_translations["city"][lang]: city,
+                    keyword_translations["current_weather"][
+                        lang
+                    ]: modified_weather_data,
+                },
                 status=status.HTTP_200_OK,
             )
         except Exception as e:
@@ -57,27 +102,47 @@ def convert_wind_direction(degrees):
     return directions[index]
 
 
-def fetch_weather_and_forecast(city, api_key, current_weather_url):
-    response_data = requests.get(current_weather_url.format(city, api_key)).json()
-    # convert  json file into python dectionary
-    country_code = str(response_data["sys"]["country"])
-    country_name = (
-        pycountry.countries.get(alpha_2=country_code).name
-        if country_code
-        else "Unknown Country"
-    )
-    weather_data = {
-        "city": str(response_data["name"]),
-        "country": country_name,
-        "temperature": str(response_data["main"]["temp"]),
-        "temperature_min": str(response_data["main"]["temp_min"]),
-        "temperature_max": str(response_data["main"]["temp_max"]),
-        "humidity": str(response_data["main"]["humidity"]),
-        "pressure": str(response_data["main"]["pressure"]),
-        "wind_speed": str(response_data["wind"]["speed"]),
-        "wind_direction": convert_wind_direction(float(response_data["wind"]["deg"])),
-        "description": str(response_data["weather"][0]["description"]),
-        "icon": response_data["weather"][0]["icon"],
-    }
+def get_response_value(response_data, key):
+    if key == "city":
+        return str(response_data.get("name"))
+    elif key == "country":
+        country_code = str(response_data["sys"]["country"])
+        return str(
+            pycountry.countries.get(alpha_2=country_code).name
+            if country_code
+            else "Unknown Country"
+        )
+    elif key == "temperature":
+        return str(response_data["main"].get("temp", None))
+    elif key == "temperature_min":
+        return str(response_data["main"].get("temp_min", None))
+    elif key == "temperature_max":
+        return str(response_data["main"].get("temp_max", None))
+    elif key == "humidity":
+        return str(response_data["main"].get("humidity", None))
+    elif key == "pressure":
+        return str(response_data["main"].get("pressure", None))
+    elif key == "wind_speed":
+        return str(response_data["wind"].get("speed", None))
+    elif key == "wind_direction":
+        return convert_wind_direction(float(response_data["wind"].get("deg", None)))
+    elif key == "description":
+        return str(response_data["weather"][0].get("description", None))
+    elif key == "icon":
+        return response_data["weather"][0].get("icon", None)
+    else:
+        return None
 
+
+def fetch_weather_and_forecast(city, language, api_key, current_weather_url):
+    response_data = requests.get(
+        current_weather_url.format(city, api_key, language)
+    ).json()
+
+    # convert  json file into python dectionary
+    weather_data = {
+        keyword_translations[key][language]: get_response_value(response_data, key)
+        for key in keyword_translations
+        if key != "current_weather"
+    }
     return weather_data
