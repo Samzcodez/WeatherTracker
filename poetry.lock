@@ -48,6 +48,22 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "attrs"
+version = "23.2.0"
+description = "Classes Without Boilerplate"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+cov = ["attrs", "coverage[toml] (>=5.3)"]
+dev = ["attrs", "pre-commit"]
+docs = ["furo", "myst-parser", "sphinx", "sphinx-notfound-page", "sphinxcontrib-towncrier", "towncrier", "zope-interface"]
+tests = ["attrs", "zope-interface"]
+tests-mypy = ["mypy (>=1.6)", "pytest-mypy-plugins"]
+tests-no-zope = ["attrs", "cloudpickle", "hypothesis", "pympler", "pytest-xdist", "pytest (>=4.3.0)"]
+
+[[package]]
 name = "certifi"
 version = "2024.2.2"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -104,25 +120,24 @@ django = ">=3.0"
 pytz = "*"
 
 [[package]]
-name = "drf-yasg"
-version = "1.21.7"
-description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
+name = "drf-spectacular"
+version = "0.27.1"
+description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-django = ">=2.2.16"
+Django = ">=2.2"
 djangorestframework = ">=3.10.3"
 inflection = ">=0.3.1"
-packaging = ">=21.0"
-pytz = ">=2021.1"
-pyyaml = ">=5.1"
-uritemplate = ">=3.0.0"
+jsonschema = ">=2.6.0"
+PyYAML = ">=5.1"
+uritemplate = ">=2.0.0"
 
 [package.extras]
-coreapi = ["coreapi (>=2.3.3)", "coreschema (>=0.0.4)"]
-validation = ["swagger-spec-validator (>=2.1.0)"]
+offline = ["drf-spectacular-sidecar"]
+sidecar = ["drf-spectacular-sidecar"]
 
 [[package]]
 name = "exceptiongroup"
@@ -199,6 +214,35 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "jsonschema"
+version = "4.21.1"
+description = "An implementation of JSON Schema validation for Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+attrs = ">=22.2.0"
+jsonschema-specifications = ">=2023.03.6"
+referencing = ">=0.28.4"
+rpds-py = ">=0.7.1"
+
+[package.extras]
+format = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3987", "uri-template", "webcolors (>=1.11)"]
+format-nongpl = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3986-validator (>0.1.0)", "uri-template", "webcolors (>=1.11)"]
+
+[[package]]
+name = "jsonschema-specifications"
+version = "2023.12.1"
+description = "The JSON Schema meta-schemas and vocabularies, exposed as a Registry"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+referencing = ">=0.31.0"
+
+[[package]]
 name = "mypy"
 version = "1.8.0"
 description = "Optional static typing for Python"
@@ -224,14 +268,6 @@ description = "Type system extensions for programs checked with the mypy type ch
 category = "main"
 optional = false
 python-versions = ">=3.5"
-
-[[package]]
-name = "packaging"
-version = "23.2"
-description = "Core utilities for Python packages"
-category = "main"
-optional = false
-python-versions = ">=3.7"
 
 [[package]]
 name = "pycountry"
@@ -308,6 +344,18 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "referencing"
+version = "0.33.0"
+description = "JSON Referencing + Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+attrs = ">=22.2.0"
+rpds-py = ">=0.7.0"
+
+[[package]]
 name = "requests"
 version = "2.31.0"
 description = "Python HTTP for Humans."
@@ -324,6 +372,14 @@ urllib3 = ">=1.21.1,<3"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
+
+[[package]]
+name = "rpds-py"
+version = "0.18.0"
+description = "Python bindings to Rust's persistent data structures (rpds)"
+category = "main"
+optional = false
+python-versions = ">=3.8"
 
 [[package]]
 name = "sniffio"
@@ -395,28 +451,30 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "d4d831f851eb5ace1020f11c5750300d2f95ba9ca34f5c701f1dc9f2ce8e0ee6"
+content-hash = "ec2611b9ede9520c0f6798cfcf26c617de1374d9e98edc713108d74538905e22"
 
 [metadata.files]
 annotated-types = []
 anyio = []
 asgiref = []
 asyncio = []
+attrs = []
 certifi = []
 charset-normalizer = []
 django = []
 django-filter = []
 djangorestframework = []
-drf-yasg = []
+drf-spectacular = []
 exceptiongroup = []
 h11 = []
 httpcore = []
 httpx = []
 idna = []
 inflection = []
+jsonschema = []
+jsonschema-specifications = []
 mypy = []
 mypy-extensions = []
-packaging = []
 pycountry = []
 pydantic = []
 pydantic-core = []
@@ -424,7 +482,9 @@ pydantic-settings = []
 python-dotenv = []
 pytz = []
 pyyaml = []
+referencing = []
 requests = []
+rpds-py = []
 sniffio = []
 sqlparse = []
 tomli = []

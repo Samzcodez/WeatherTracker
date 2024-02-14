@@ -14,9 +14,9 @@ pydantic = "^2.6.1"
 pydantic-settings = "^2.1.0"
 requests = "^2.31.0"
 pycountry = "^23.12.11"
-drf-yasg = "^1.21.7"
 httpx = "^0.26.0"
 asyncio = "^3.4.3"
+drf-spectacular = "^0.27.1"
 
 [tool.poetry.dev-dependencies]
 
