@@ -23,9 +23,6 @@ RUN true \
 # Copy the project files to the working directory
 COPY . $APP_PATH
 
-# Expose the Django application server port
-EXPOSE 8000
-
 # Set up the entrypoint
 COPY entrypoint.sh $APP_PATH/entrypoint.sh
 RUN chmod +x $APP_PATH/entrypoint.sh

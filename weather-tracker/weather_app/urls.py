@@ -15,12 +15,12 @@ urlpatterns = [
             "lang": "en",
             "cache_timeout": 10,
         },  # Set the default value for 'language' and caching timeout in minutes
-        name="get_current_weather_default",
+        name="get_current_weather_default_lang",
     ),
     path(
         "current-weather/<str:city>/<str:lang>/",
         GetCurrentWeather.as_view(),
         {"cache_timeout": 10},  # Default caching timeout in minutes
-        name="get_current_weather_with_timeout",
+        name="get_current_weather_without_timeout",
     ),
 ]

@@ -4,4 +4,4 @@ set -e
 
 poetry install --without dev --no-ansi --no-root
 
-exec poetry run python -m weather-tracker.manage runserver
+exec poetry run python -m weather-tracker.manage runserver 0.0.0.0:8000 

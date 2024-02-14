@@ -111,7 +111,7 @@ LOGGING = {
         },
         "weather-tracker.weather_app": {
             "handlers": ["stdout"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         },
     },
