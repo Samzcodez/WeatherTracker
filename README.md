@@ -12,6 +12,7 @@ Users can input a city to retrieve detailed weather information, including:
 - [x] Weather description
 
 ## Installation
+Prerequisite : Docker compose installed in your system. [docker-compose](https://docs.docker.com/compose/install/)
 Follow these steps to set up the WeatherTracker application:
 1. **API Key**: Create a free account on [OpenWeatherMap](https://openweathermap.org) and obtain an API key.
 2. **Docker Compose**: Run the following command, replacing `<your_api_key>` with the obtained API key:
@@ -30,9 +31,9 @@ Retrieve current weather information using the following API endpoints:
 1. **Get current weather:**
 
     Get current weather for a specific city in three different languages, allowing you to configure the cache timeout.
-    Endpoint: http://127.0.0.1:8000/weather/<str:city>/<str:lang>/<int:cache_timeout>/
-    Supported Languages: English (en), German (de), French (fr)
-    Cache Timeout Options: [5/10/60] minutes
+    Endpoint: http://127.0.0.1:8000/weather/<str:city>/<str:lang>/<int:cache_timeout>/ .
+    Supported Languages: English (en), German (de), French (fr) .
+    Cache Timeout Options: [5/10/60] minutes.
 
 2. **Get current weather without cache configuration (default: 10 minutes):**
 

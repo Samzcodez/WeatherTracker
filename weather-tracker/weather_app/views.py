@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from typing import Optional, Any
+from .helpers import validate_input, convert_wind_direction
 import httpx
 import asyncio
 import pycountry
@@ -17,6 +18,8 @@ open_weather_api_key = settings.OPEN_WEATHER_API_KEY
 current_weather_url = (
     "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}&units=metric&lang={}"
 )
+valid_cache_timeouts = [5, 10, 60]
+valid_languages = ["en", "de", "fr"]
 
 # Keyword translations for response in English, German, and French
 keyword_translations = {
@@ -56,7 +59,14 @@ keyword_translations = {
 
 
 # Create your views here.
-def index(request: HttpRequest) -> HttpResponse:
+def weather_error_view(request):
+    """
+    Handle the error requests and redirect to home page.
+    """
+    return render(request, "base_config/error.html")
+
+
+def weather_index(request: HttpRequest) -> HttpResponse:
     """
     Handle the index page, fetching and displaying weather data through UI.
     """
@@ -95,18 +105,17 @@ class GetCurrentWeather(APIView):
         Handles requests from endpoint: GET weather/{city}/{lang}/{cache_timeout}/
         """
         try:
+            # Check if language given is valid
+            language_error = validate_input(valid_languages, lang, "language", logger)
+            if language_error:
+                return language_error
+
             # Check if cahe_timeout given is valid
-            valid_cache_timeouts = [5, 10, 60]
-            if cache_timeout not in valid_cache_timeouts:
-                logging.error(
-                    f"Invalid cache_timeout value. Accepted values are : {valid_cache_timeouts}"
-                )
-                return Response(
-                    {
-                        "error": f"Invalid cache_timeout value. Accepted values are : {valid_cache_timeouts}"
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            cache_timeout_error = validate_input(
+                valid_cache_timeouts, cache_timeout, "Cache timeout", logger
+            )
+            if cache_timeout_error:
+                return cache_timeout_error
 
             cache_key = f"{city}_{lang}"
             cached_data = cache.get(cache_key)
@@ -146,18 +155,9 @@ class GetCurrentWeather(APIView):
         except Exception as e:
             logging.error(f"Error fetching weather data for the city {city}: {str(e)}")
             return Response(
-                {"error": f"Error fetching weather data for the city {city}: {str(e)}"},
+                {"error": f"Error fetching weather data for the city : {city}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-
-def convert_wind_direction(degrees: float) -> str:
-    """
-    Convert wind direction in degrees to a compass direction.
-    """
-    directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
-    index = round(degrees / 45) % 8
-    return directions[index]
 
 
 def get_response_value(response_data: dict, key: str) -> Optional[str]:
