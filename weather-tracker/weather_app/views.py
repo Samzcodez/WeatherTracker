@@ -92,7 +92,7 @@ class GetCurrentWeather(APIView):
         self, request: HttpRequest, city: str, lang: str, cache_timeout: int
     ) -> HttpResponse:
         """
-        Handles requests from endpoint: GET weather/current-weather/{city}/{lang}/{cache_timeout}/
+        Handles requests from endpoint: GET weather/{city}/{lang}/{cache_timeout}/
         """
         try:
             # Check if cahe_timeout given is valid

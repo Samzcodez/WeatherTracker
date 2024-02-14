@@ -30,19 +30,19 @@ Retrieve current weather information using the following API endpoints:
 1. **Get current weather:**
 
     Get current weather for a specific city in three different languages, allowing you to configure the cache timeout.
-    Endpoint: http://127.0.0.1:8000/weather/current-weather/<str:city>/<str:lang>/<int:cache_timeout>/
+    Endpoint: http://127.0.0.1:8000/weather/<str:city>/<str:lang>/<int:cache_timeout>/
     Supported Languages: English (en), German (de), French (fr)
     Cache Timeout Options: [5/10/60] minutes
 
 2. **Get current weather without cache configuration (default: 10 minutes):**
 
     Retrieve current weather for any city in three languages without explicitly configuring the cache timeout.
-    Endpoint: http://127.0.0.1:8000/weather/current-weather/<str:city>/<str:lang>/
+    Endpoint: http://127.0.0.1:8000/weather/<str:city>/<str:lang>/
 
 3. **Get current weather in English without cache configuration:**
 
     Retrieve current weather for any city in English without specifying cache settings.
-    Endpoint: http://127.0.0.1:8000/weather/current-weather/<str:city>/
+    Endpoint: http://127.0.0.1:8000/weather/<str:city>/
 
 
 ## User Interface
